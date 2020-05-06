@@ -8,11 +8,11 @@
 #include <arpa/inet.h>
 #include <sys/socket.h>
 
-#define PORT 13334
+#define PORT 13333
 #define MAX_BUFFER 1024
 
-#define CLEAR_COMMAND "cmd0"
-#define CLOSE_SOCKET "cmdclssock"
+#define CLEAR_COMMAND "cmdclear"
+#define CLOSE_SOCKET "cmdclosesocket"
 
 int serverfd = 0;
 int clientfd = 0;
