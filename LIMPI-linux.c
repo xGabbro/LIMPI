@@ -123,7 +123,8 @@ void startGame() {
 	int lives = 5;
 	char c;
 	while(1) {
-		system("clear");
+		//system("clear");
+		cc();
 
 		//Vedo se ho perso
 		if (lives == 0) {
@@ -227,7 +228,8 @@ void spectGame() {
 		reciveMessage(buffer);
 
 		if ( strcmp(buffer, CLEAR_COMMAND) == 0 ) {
-			system("clear");
+			//system("clear");
+			cc();
 			printf("----LOG----\n");
 		}
 		else if ( strcmp(buffer, CLOSE_SOCKET) == 0 ) {

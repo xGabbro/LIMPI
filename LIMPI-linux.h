@@ -35,3 +35,10 @@ void sendMessage(char * buffer);
 void reciveMessage(char * buffer);
 
 void printError(char * error);
+
+void cc()  {
+
+	for (int i = 0; i < 50; i++)
+		printf("\n");
+
+}
