@@ -2,7 +2,9 @@
 
 int main()
 {
+#ifdef _WIN32
     SetConsoleTitle("LIMPI - L'IMPICCATO ONLINE");
+#endif
 
     int choose;
 
@@ -22,8 +24,7 @@ int main()
         printf("---Server Log--- \n");
         setupSocketForServer(PORT);
 
-        Sleep(1000);
-        system("cls");
+        clearConsole();
 
         while (1)
         {
@@ -93,8 +94,7 @@ int main()
         printf("---Client Log--- \n");
         setupSocketForClient(PORT, ip);
 
-        Sleep(1000);
-        system("cls");
+        clearConsole();
 
         while (1)
         {
@@ -112,7 +112,7 @@ int main()
                 choose = atoi(buffer);
                 if (choose == 1)
                 {
-                    system("cls");
+                    clearConsole();
 
                     printf("Inserisci la frase: ");
                     scanf(" %[^\n]%*c", buffer);
@@ -200,7 +200,7 @@ void startGame()
 
         strcat(buffer, buffer2);
 
-        printf(buffer);
+        printf("%s", buffer);
         sendMessage(buffer, strlen(buffer));
 
         //Vedo se ho perso
@@ -237,7 +237,7 @@ void startGame()
         c = toLowerCase(buffer[0]);
 
         //Pulisco la console
-        system("cls");
+        clearConsole();
         sendMessage(CLEAR_CONSOLE, strlen(CLEAR_CONSOLE));
 
         //Vedo se la lettera è già stata utilizzata
@@ -300,7 +300,7 @@ void spectGame()
         if (strcmp(buffer, CLEAR_CONSOLE) == 0)
         {
             //Pulisco console
-            system("cls");
+            clearConsole();
         }
         else if (strcmp(buffer, FINISH_GAME) == 0)
         {

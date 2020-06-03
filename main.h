@@ -1,7 +1,7 @@
 #pragma once
 
-#include "lib\xsocket\xsocket.c"
-#include "lib\utils\utils.c"
+#include <xsocket.h>
+#include <utils.h>
 
 #include <stdio.h>
 #include <stdlib.h>

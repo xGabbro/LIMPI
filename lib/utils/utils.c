@@ -21,6 +21,16 @@ void spaceString(char *_Str, char *_Dest)
     strcpy(_Dest, finalstr);
 }
 
+void clearConsole() {
+
+#ifdef _WIN32
+    system("cls");
+#else
+    system("clear");
+#endif
+
+}
+
 char toLowerCase(char c)
 {
     const char LOWER[] = "abcdefghijklmnopqrstuvwxyz";

@@ -6,4 +6,6 @@
 
 void spaceString(char *_Str, char *_Dest);
 
+void clearConsole();
+
 char toLowerCase(char c);
