@@ -1,5 +1,13 @@
 #include "xsocket.h"
 
+#ifdef _WIN32
+    SOCKET serverSocket;
+    SOCKET clientSocket;
+#else
+    int serverSocket;
+    int clientSocket;
+#endif
+
 void setupSocketForServer(int _PORT)
 {
 
@@ -118,7 +126,7 @@ void setupSocketForClient(int _PORT, char *_IP)
 
 }
 
-void sendMessage(char *buffer, int size)
+void sendMessage(const char *buffer, int size)
 {
     int result;
 
@@ -132,6 +140,7 @@ void receiveMessage(char *buffer, int size)
     memset(buffer, 0, size);
 
     result = recv(clientSocket, buffer, size - 1, 0);
+
 }
 
 void exitPLS()
@@ -151,7 +160,19 @@ void exitPLS()
 
 void waitForUserInput()
 {
-    printf("Premere un tasto per continuare . . .\n");
-    fflush(stdin);
+    clearInput();
+    printf("Premere spazio per continuare . . .\n");
     getchar();
+    
+}
+
+void clearInput()
+{
+  int ch;
+
+  do
+    ch = fgetc(stdin); 
+  while ( ch != EOF && ch != '\n' ); 
+
+  clearerr(stdin);
 }

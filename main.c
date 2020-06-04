@@ -2,10 +2,6 @@
 
 int main()
 {
-#ifdef _WIN32
-    SetConsoleTitle("LIMPI - L'IMPICCATO ONLINE");
-#endif
-
     int choose;
 
     char buffer[MAXBUFFER];
@@ -98,7 +94,7 @@ int main()
 
         while (1)
         {
-            printf("Il client sta impostando il gioco... \n");
+            printf("Server sceglie cosa fare \n");
 
             //Devo iniziare una nuova partita o esco?
             receiveMessage(buffer, sizeof(buffer));
@@ -162,7 +158,7 @@ void startGame()
     memset(buffer2, 0, sizeof(buffer2));
 
     //Setup della stringa che conterrà le lettere usate
-    char *usedLetters = malloc(sizeof(trustedLetters) * sizeof(char));
+    char *usedLetters = (char*)malloc(sizeof(trustedLetters) * sizeof(char));
     memset(usedLetters, 0, sizeof(usedLetters));
 
     //Setup delle stringe per il gioco
@@ -171,10 +167,10 @@ void startGame()
 
     receiveMessage(buffer, sizeof(buffer));
 
-    phrase = malloc(strlen(buffer) * sizeof(char) + 1);
+    phrase = (char*)malloc(strlen(buffer) * sizeof(char) + 1);
     memset(phrase, '\0', sizeof(phrase));
 
-    phraseAUX = malloc(strlen(buffer) * sizeof(char) + 1);
+    phraseAUX = (char*)malloc(strlen(buffer) * sizeof(char) + 1);
     memset(phraseAUX, '\0', sizeof(phraseAUX));
 
     memcpy(phrase, buffer, strlen(buffer) + 1);
@@ -295,7 +291,8 @@ void spectGame()
     while (1)
     {
         //Ricevo e vedo cosa fare
-        receiveMessage(buffer, MAXBUFFER);
+
+        receiveMessage(buffer, sizeof(buffer));
 
         if (strcmp(buffer, CLEAR_CONSOLE) == 0)
         {

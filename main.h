@@ -11,12 +11,12 @@
 
 #define PORT 13333
 
-#define NEW_GAME "cmdnewgame1x"
-#define CLOSE_SOCKET "cmdclosesocket1x"
-#define CLEAR_CONSOLE "cmdclearconsole1x"
-#define FINISH_GAME "cmdfinishgame1x"
+const char * NEW_GAME = "cmdnewgame1x";
+const char * CLOSE_SOCKET = "cmdclosesocket1x";
+const char * CLEAR_CONSOLE = "cmdclearconsole1x";
+const char * FINISH_GAME = "cmdfinishgame1x";
 
-const char trustedLetters[] = "abcdefghijklmnopqrstuvwxyz";
+const char * trustedLetters = "abcdefghijklmnopqrstuvwxyz";
 
 void startGame();
 void spectGame();

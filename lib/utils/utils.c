@@ -3,7 +3,7 @@
 void spaceString(char *_Str, char *_Dest)
 {
     char *finalstr;
-    finalstr = malloc(strlen(_Str) * 2 + 2);
+    finalstr = (char*)malloc(strlen(_Str) * 2 + 2);
     memset(finalstr, 0, sizeof(finalstr));
 
     char space = ' ';
