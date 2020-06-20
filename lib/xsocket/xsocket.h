@@ -2,7 +2,8 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <string.h>
+
+#define socket_exception const char *
 
 #ifdef _WIN32
     #include <winsock2.h>
@@ -22,13 +23,23 @@
     extern int clientSocket;
 #endif
 
-void setupSocketForServer(int _PORT);
-void setupSocketForClient(int _PORT, char * _IP);
+class XSOCKET {
 
-void sendMessage(const char * buffer, int size);
-void receiveMessage(char * buffer, int size);
 
-void exitPLS();
+    public:
+        void setupSocketForServer(int _PORT);
+        void setupSocketForClient(int _PORT, char * _IP);
+
+        void sendMessage(const char * buffer, int size);
+        void receiveMessage(char * buffer, int size);
+
+        void close();
+
+    private:
+
+    protected:
+
+};
 
 void clearInput();
 void waitForUserInput();

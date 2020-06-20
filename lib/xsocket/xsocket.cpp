@@ -8,35 +8,21 @@
     int clientSocket;
 #endif
 
-void setupSocketForServer(int _PORT)
+void XSOCKET::setupSocketForServer(int _PORT)
 {
 
 #ifdef _WIN32
     //Inizializzazione di winsock
     WSADATA wsa;
     if (WSAStartup(WSA_VERSION, &wsa) != NO_ERROR)
-    {
-
-        printf("Errore nell'inizializzare WinSock2! \n");
-        waitForUserInput();
-        exit(1);
-    }
-
-    printf("-> WSA inizializzato correttamente! \n");
+        throw "[!] Errore nell'inizializzare WinSock2! \n";
 
 #endif
 
     //Creo il socket
     serverSocket = socket(AF_INET, SOCK_STREAM, 0);
     if (serverSocket == 0)
-    {
-
-        printf("Impossibile creare il socket! \n");
-        waitForUserInput();
-        exit(1);
-    }
-
-    printf("-> Socket creato correttamente! \n");
+        throw "[!] Impossibile creare il socket! \n";
 
     //Proprità del server
     struct sockaddr_in serverInfo;
@@ -47,65 +33,35 @@ void setupSocketForServer(int _PORT)
 
     //Bind del server
     if (bind(serverSocket, (struct sockaddr*)&serverInfo, sizeof(serverInfo)) == -1)
-    {
-
-        printf("Impossibile connettere il server al socket! \n");
-        waitForUserInput();
-        exit(1);
-    }
+        throw "[!] Impossibile connettere il server al socket! \n";
 
     //Metto in ascolto il server
     if (listen(serverSocket, 1) == -1)
-    {
-
-        printf("Impossibile mettere in ascolto il server! \n");
-        waitForUserInput();
-        exit(1);
-    }
+        throw "[!] Impossibile mettere in ascolto il server! \n";
 
     //Aspetto che qualcuno si connetta
 
-    printf("-> Sto aspettando che qualcuno si connetta... \n");
-
     clientSocket = accept(serverSocket, NULL, NULL);
     if (clientSocket == -1)
-    {
-
-        printf("Impossibile stabilire una connessione co il client! \n");
-        waitForUserInput();
-        exit(1);
-    }
+        throw "[!] Impossibile stabilire una connessione co il client! \n";
 
 }
 
-void setupSocketForClient(int _PORT, char *_IP)
+void XSOCKET::setupSocketForClient(int _PORT, char *_IP)
 {
 
 #ifdef _WIN32
     //Inizializzazione di winsock
     WSADATA wsa;
     if (WSAStartup(WSA_VERSION, &wsa) != NO_ERROR)
-    {
+        throw "[!] Errore nell'inizializzare WinSock2! \n";
 
-        printf("Errore nell'inizializzare WinSock2! \n");
-        waitForUserInput();
-        exit(1);
-    }
-
-    printf("-> WSA inizializzato correttamente! \n");
 #endif
 
     //Creo il socket
     clientSocket = socket(AF_INET, SOCK_STREAM, 0);
     if (clientSocket == 0)
-    {
-
-        printf("Impossibile creare il socket! \n");
-        waitForUserInput();
-        exit(1);
-    }
-
-    printf("-> Socket creato correttamente! \n");
+        throw "[!] Impossibile creare il socket! \n";
 
     //Proprità del client
     struct sockaddr_in clientInfo;
@@ -114,36 +70,36 @@ void setupSocketForClient(int _PORT, char *_IP)
     clientInfo.sin_port = htons(_PORT);
     clientInfo.sin_addr.s_addr = inet_addr(_IP);
 
-    printf("-> Mi connetto al server... \n");
-
     if (connect(clientSocket, (struct sockaddr*)&clientInfo, sizeof(clientInfo)) == -1)
-    {
-
-        printf("Impossibile stabilire una connessione con il server! \n");
-        waitForUserInput();
-        exit(1);
-    }
+        throw "[!] Impossibile stabilire una connessione con il server! \n";
 
 }
 
-void sendMessage(const char *buffer, int size)
+void XSOCKET::sendMessage(const char *buffer, int size)
 {
     int result;
 
     result = send(clientSocket, buffer, size + 1, 0);
+    
+    if (result < 0)
+        throw "[!] Errore durante l'invio del messaggio! \n";
+
 }
 
-void receiveMessage(char *buffer, int size)
+void XSOCKET::receiveMessage(char * buffer, int size)
 {
     int result;
 
-    memset(buffer, 0, size);
-
     result = recv(clientSocket, buffer, size - 1, 0);
+
+    if (result == 0)
+        throw "[!] Errore di disconnessione! \n";
+    else if (result == -1)
+        throw "[!] Errore durante la ricezione del messaggio! \n";
 
 }
 
-void exitPLS()
+void XSOCKET::close()
 {
 
 #ifdef _WIN32
