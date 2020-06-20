@@ -8,8 +8,8 @@ int main()
     memset(buffer, 0, sizeof(buffer));
 
     // Server o Client?
-    printf("[1] Server \n");
-    printf("[2] Client \n");
+    printf("[1] Crea una stanza (richiede porta sbloccata) \n");
+    printf("[2] Entra in una stanza \n");
     scanf("%s", buffer);
 
     choose = atoi(buffer);
@@ -20,10 +20,10 @@ int main()
         printf("---Server Log--- \n");
         setupSocketForServer(PORT);
 
-        clearConsole();
-
         while (1)
         {
+            clearConsole();
+
             //Nuova partita o esci
             printf("[1] Inizia una nuova partita \n");
             printf("[2] Esci \n");
@@ -39,6 +39,8 @@ int main()
                 printf("[1] Indovina il server \n");
                 printf("[2] Indovina il client \n");
                 scanf("%s", buffer);
+        
+                clearConsole();
 
                 choose = atoi(buffer);
                 if (choose == 1)
@@ -64,6 +66,8 @@ int main()
                     printf("\n");
 
                     sendMessage(buffer, strlen(buffer));
+
+                    clearConsole();
 
                     spectGame();
                 }
@@ -94,7 +98,9 @@ int main()
 
         while (1)
         {
-            printf("Server sceglie cosa fare \n");
+            clearConsole();
+
+            printf("Il server sta scegliendo cosa fare... \n");
 
             //Devo iniziare una nuova partita o esco?
             receiveMessage(buffer, sizeof(buffer));
@@ -105,16 +111,15 @@ int main()
 
                 receiveMessage(buffer, sizeof(buffer));
 
+                clearConsole();
+
                 choose = atoi(buffer);
                 if (choose == 1)
                 {
-                    clearConsole();
 
                     printf("Inserisci la frase: ");
                     scanf(" %[^\n]%*c", buffer);
                     printf("\n");
-
-                    printf("%s\n", buffer);
 
                     sendMessage(buffer, strlen(buffer));
 
@@ -124,11 +129,16 @@ int main()
 
                     sendMessage(buffer, strlen(buffer));
 
+                    clearConsole();
+
                     spectGame();
                 }
                 else if (choose == 2)
                 {
+
                     printf("Il server sta impostando il gioco... \n");
+
+                    clearConsole();
 
                     startGame();
                 }
@@ -150,12 +160,12 @@ int main()
 
 void startGame()
 {
+    char livesStr[MAXBUFFER];
+    char spacedPhraseAux[MAXBUFFER];
+
     //Setup buffer
     char buffer[MAXBUFFER];
     memset(buffer, 0, sizeof(buffer));
-
-    char buffer2[MAXBUFFER];
-    memset(buffer2, 0, sizeof(buffer2));
 
     //Setup della stringa che conterrà le lettere usate
     char *usedLetters = (char*)malloc(sizeof(trustedLetters) * sizeof(char));
@@ -185,16 +195,19 @@ void startGame()
 
     //Inizio del gioco
     char c;
-    int flag = 0;
+    bool flag; 
+    bool isUsed = true;
     while (1)
     {
-
         //Stampo lo status per i 2 giocatori
-        spaceString(phraseAUX, buffer);
+        spaceString(phraseAUX, spacedPhraseAux);
 
-        sprintf(buffer2, "Vite rimaste: %d\n", lives);
+        if (isUsed)
+            sprintf(livesStr, "Vite rimaste: %d", lives);
+        else   
+            sprintf(livesStr, "Vite rimaste: %d(-1)", lives);
 
-        strcat(buffer, buffer2);
+        statusToStr(buffer, spacedPhraseAux, livesStr, usedLetters);
 
         printf("%s", buffer);
         sendMessage(buffer, strlen(buffer));
@@ -237,7 +250,7 @@ void startGame()
         sendMessage(CLEAR_CONSOLE, strlen(CLEAR_CONSOLE));
 
         //Vedo se la lettera è già stata utilizzata
-        flag = 0;
+        flag = false;
         for (int i = 0; i < strlen(usedLetters); i++)
         {
 
@@ -249,7 +262,7 @@ void startGame()
 
                 waitForUserInput();
 
-                flag = 1;
+                flag = true;
 
                 break;
             }
@@ -260,8 +273,8 @@ void startGame()
         else
             strncat(usedLetters, &c, 1);
 
-        //Sostituisco la lettera nella stringa ausiliaria
-        flag = 0;
+        //Sostituisco la lettera nella stringa se esiste ausiliaria
+        isUsed = false;
         for (int i = 0; i < strlen(phrase); i++)
         {
 
@@ -269,11 +282,11 @@ void startGame()
             {
                 phraseAUX[i] = phrase[i];
 
-                flag = 1;
+                isUsed = true;
             }
         }
 
-        if (!flag)
+        if (!isUsed)
             lives -= 1;
             
     }
@@ -313,11 +326,11 @@ void spectGame()
 
 void getPhraseAUX(char *_Str, char *_Dest)
 {
-    int flag;
+    bool flag;
 
     for (int i1 = 0; i1 < strlen(_Str); i1 += 1)
     {
-        flag = 0;
+        flag = false;
 
         for (int i2 = 0; i2 < strlen(trustedLetters); i2 += 1)
         {
@@ -325,7 +338,7 @@ void getPhraseAUX(char *_Str, char *_Dest)
             if (toLowerCase(_Str[i1]) == trustedLetters[i2])
             {
 
-                flag = 1;
+                flag = true;
 
                 break;
             }
@@ -336,4 +349,53 @@ void getPhraseAUX(char *_Str, char *_Dest)
         else
             _Dest[i1] = _Str[i1];
     }
+}
+
+void statusToStr(char * _Dest, const char * _phraseAUX, const char * _livesStr, const char * _usedLetters) {
+
+    char * lettersStr = (char*)malloc(strlen(trustedLetters) * sizeof(char) * 3 + 1);
+    memset(lettersStr, 0, sizeof(lettersStr));
+
+    for (int s1 = 0; s1 < strlen(trustedLetters); s1 += 1) {
+        static bool flag;
+        flag = false;
+
+        for (int s2 = 0; s2 < strlen(_livesStr); s2 += 1) {
+
+            if (trustedLetters[s1] == _usedLetters[s2]) {
+
+                flag = true;
+
+                break;
+            }
+
+        }
+
+        if (!flag) {
+            strncat(lettersStr, &trustedLetters[s1], 1);
+            strcat(lettersStr, " ");
+        }
+
+    }
+
+    strcpy(_Dest, "");
+
+    strcat(_Dest, "---STATUS--- \n");
+    
+    strcat(_Dest, "-> ");
+    strcat(_Dest, _phraseAUX);
+
+    strcat(_Dest, "\n");
+
+    strcat(_Dest, "-> ");
+    strcat(_Dest, _livesStr);
+
+    strcat(_Dest, "\n");
+
+    strcat(_Dest, "-> Lettere non usate: { ");
+    strcat(_Dest, lettersStr);
+    strcat(_Dest, "}");
+
+    strcat(_Dest, "\n\n");
+
 }

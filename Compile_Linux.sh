@@ -1,9 +1,8 @@
 #! /bin/bash
-rm -rf "build/"
 rm -rf "release/"
 
-mkdir "build"
-mkdir "release"
+mkdir -p "build"
+mkdir -p "release"
 
 echo "Sto compilando il programma con le librerie..."
 g++ -c main.c -o build/LIMPI-Windows.o -Ilib/xsocket -Ilib/utils

@@ -1,7 +1,6 @@
 @echo off
 
 if exist "build\" rd /s /q "build"
-if exist "release\" rd /s /q "release"
 
 if not exist "build\" mkdir "build"
 if not exist "release\" mkdir "release"

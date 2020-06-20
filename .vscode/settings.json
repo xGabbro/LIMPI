@@ -1,6 +1,7 @@
 {
     "C_Cpp.errorSquiggles": "Disabled",
     "files.associations": {
-        "limpi-windows.h": "c"
+        "limpi-windows.h": "c",
+        "system_error": "c"
     }
 }

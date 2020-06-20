@@ -3,6 +3,8 @@
 #include <xsocket.h>
 #include <utils.h>
 
+#include <cstdarg>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -20,5 +22,7 @@ const char * trustedLetters = "abcdefghijklmnopqrstuvwxyz";
 
 void startGame();
 void spectGame();
+
+void statusToStr(char * _Dest, const char * _phraseAUX, const char * _livesStr, const char * _usedLetters);
 
 void getPhraseAUX(char * _Str, char * _Dest);

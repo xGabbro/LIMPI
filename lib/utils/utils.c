@@ -3,11 +3,10 @@
 void spaceString(char *_Str, char *_Dest)
 {
     char *finalstr;
-    finalstr = (char*)malloc(strlen(_Str) * 2 + 2);
+    finalstr = (char*)malloc(strlen(_Str) * 2 + 1);
     memset(finalstr, 0, sizeof(finalstr));
 
     char space = ' ';
-    char nl = '\n';
 
     for (int s1 = 0; s1 < strlen(_Str); s1 += 1)
     {
@@ -15,8 +14,6 @@ void spaceString(char *_Str, char *_Dest)
         strncat(finalstr, &_Str[s1], 1);
         strncat(finalstr, &space, 1);
     }
-
-    strncat(finalstr, &nl, 1);
 
     strcpy(_Dest, finalstr);
 }
